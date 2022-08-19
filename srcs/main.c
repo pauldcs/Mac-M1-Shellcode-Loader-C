@@ -1,6 +1,8 @@
 #include "sc.h"
 
-int	main(void)
+int	main(int ac, char **av)
 {
+	(void)ac;
+	(void)av;
 	return (__load());
 }

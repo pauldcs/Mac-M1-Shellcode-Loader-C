@@ -10,14 +10,11 @@ C_SRCS		:=		\
 
 all: $(MACHO)
 
-asm.o: asm/asm.s
+asm.o: srcs/asm/minishell.s
 	as $< -o asm.o
 
 $(MACHO): asm.o
 	ld $(LFLAGS) $< -o $@ 
-
-sc: $(MACHO)
-	@bash sc.sh
 
 exec:
 	$(CC) $(CFLAGS) $(C_SRCS) -I./incs -o $(NAME)
