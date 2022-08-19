@@ -1,33 +1,36 @@
 #!/bin/bash
 
-FUNC=$2
+FUNCTION=$2
+PROGRAM=$1
 
 if [ $# -lt 1 ]; then
-    echo "Error: Usage" > /dev/stderr
-	echo "Usage: bash ./script.sh <program> [function]" > /dev/stderr
+    >&2 echo "Error: Usage"
+	>&2 echo "Usage: bash ./script.sh <program> [function]"
     exit -1
 fi
 
-PROG=$1
-
-if test -f "$PROG"; then
+if test -f "$PROGRAM"; then
 	if [ $# -lt 2 ]; then
-		(nm -Am $PROG && objdump -d $PROG && objdump -s $PROG) 2> /dev/null || 
-		(printf "Error: %s: No text sections\n" $PROG > /dev/stderr && exit 1)
+		(
+			nm -Am $PROGRAM &&
+			objdump -d $PROGRAM &&
+			objdump -s $PROGRAM
+		) 2> /dev/null || 
+			(>&2 printf "Error: %s: Failed to dump\n" $PROGRAM && exit 1)
 		exit 0
 	fi
-	printf "const char %s[] =\n{\n" $FUNC
+	printf "const char %s[] =\n{\n" $FUNCTION
 	(
 		(
-			objdump -d $PROG |
-			awk -v RS= "/^[[:xdigit:]]+ <$FUNC>/" | tail -n +2 |
+			objdump -d $PROGRAM |
+			awk -v RS= "/^[[:xdigit:]]+ <$FUNCTION>/" | tail -n +2 |
 			awk '{printf "\t0x%s, 0x%s, 0x%s, 0x%s,\n", $2,$3,$4,$5,$6,$7,$8,$9}'
 		) 2> /dev/null
-	) | tee >(SIZE=$(wc -w); echo "Shellcode size: " $SIZE)
+	) | tee >(SIZE=$(wc -w); echo "Shellcode size:" $SIZE)
 
 	echo "};"
 	exit 0;
 fi
 
-printf "Error: %s: No such file or directory\n" $PROG > /dev/stderr
+>&2 printf "Error: %s: No such file\n" $PROGRAM
 exit 127
