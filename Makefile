@@ -1,13 +1,12 @@
 NAME		:= exe
 MACHO		:= bin.macho
-ASM			:= srcs/asm/minishell.s
+ASM			:= srcs/asm/execve_cmd.s
 CC			:= gcc
 LFLAGS		:= -lSystem -syslibroot `xcrun -sdk macosx --show-sdk-path`
 CFLAGS		:= -Wall -Wextra -Werror
 
 C_SRCS		:=		\
-	srcs/main.c		\
-	srcs/loader.c	\
+	srcs/arm64e_loader.c	\
 
 all: $(MACHO)
 
@@ -30,4 +29,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY	: all sc clean fclean re
+.PHONY	: all sc clean exec fclean re
