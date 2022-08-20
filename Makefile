@@ -1,7 +1,8 @@
 NAME		:= exe
 MACHO		:= bin.macho
+ASM			:= srcs/asm/minishell.s
 CC			:= gcc
-LFLAGS		:= -lSystem -syslibroot `xcrun -sdk macosx --show-sdk-path` -arch arm64
+LFLAGS		:= -lSystem -syslibroot `xcrun -sdk macosx --show-sdk-path`
 CFLAGS		:= -Wall -Wextra -Werror
 
 C_SRCS		:=		\
@@ -10,7 +11,7 @@ C_SRCS		:=		\
 
 all: $(MACHO)
 
-asm.o: srcs/asm/minishell.s
+asm.o: $(ASM)
 	as $< -o asm.o
 
 $(MACHO): asm.o

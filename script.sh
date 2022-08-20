@@ -11,7 +11,7 @@ if ! command -v objdump > /dev/null; then
     >&2 echo "Error: objdump not found"
     exit -1
 fi
-if [ $# -lt 1 ]; then
+if [ $# -eq 0 ] ; then
 	>&2 echo "Error: Usage"
 	>&2 echo "Usage: bash ./script.sh <program> [function]"
 	exit -1
